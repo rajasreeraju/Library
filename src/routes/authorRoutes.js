@@ -1,25 +1,22 @@
 const express=require('express');
 const authorRouter=express.Router();
+const authorData=require('../model/authorData');
 function route(nav){
-    var authors=[{name:"Arundhathi Roy"},
-            {name:"Ravinder Singh"},
-            {name:"J K Rowlings"},
-            {name:"Chethan Bhagath"},
-            {name:"Kamala Das"}]
     authorRouter.route('/')
         .get((req,res)=>{
-        res.render("authors",{authors,nav,title:"Books"});
+            authorData.find()
+            .then(function(author){
+        res.render("authors",{author,nav,title:"Author"});
     });
     authorRouter.route('/:id')
         .get((req,res)=>{
-    var id=req.params.id;
+            const id=req.params.id;
+            authorData.findOne({_id:id})
+        .then(function(author){
+            res.render('author',{nav,title:"Library",author});
 
-    res.render("author",{
-        nav:[{link:'/books',title:'Books'},
-        {link:'/authors',title:'Authors'},
-        {link:'/aboutus',title:'ABOUT Us'},
-        {link:'/contactus',title:'CONTACT US'}],
-        title:"Authors",author:authors[id]
+    });
+
 
     });
   });

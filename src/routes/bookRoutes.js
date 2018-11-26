@@ -1,22 +1,23 @@
 const express=require('express');
 const booksRouter=express.Router();
+const bookData=require('../model/bookData');
 function route(nav){
-    var books=[{title:"God Of Small Things",author:"Arundhathi Roy",type:"Debut Novel"},
-        {title:"Your Dreams Are Mine Now",author:"Ravinder Singh",type:"Love Story"},
-        {title:"MyStrory",author:"Kamala Das",type:"Auto biograpy"},
-        {title:"Half Girlfriend",author:"Chethan Bhagath",type:"Love Story"},
-        {title:"Harry Potter",author:"G K Rowling",type:"Fiction"}]
     booksRouter.route('/')
         .get((req,res)=>{
-            res.render("books",{books,nav,title:"Books"});
+            bookData.find()
+            .then(function(books){
+                res.render('books',{books,nav,title:"Books"});
+            });
+
         });
 
     booksRouter.route('/:id')
         .get((req,res)=>{
             const id=req.params.id;
+            bookData.findOne({_id:id})
+            .then(function(book){
+                res.render('book',{nav,title:"Library",book});
 
-             res.render("book",{nav,
-            title:"Books",book:books[id]
         });
     });
     return booksRouter;
